@@ -4,6 +4,8 @@ import BookList from '../components/BookList';
 import {Container} from 'react-bootstrap';
 import AddBook from '../components/AddBook';
 import AddBookModal from '../components/AddBookModal';
+import Confetti from 'react-confetti';
+import ReactTimeout from 'react-timeout';
 
 class Main extends React.Component {
   
@@ -16,7 +18,24 @@ class Main extends React.Component {
         {name: 'East of Eden', progress: 200, max: 200},
       ],
       showAddModal: false,
+      windowSize: {width: undefined, height: undefined},
+      showConfetti: false,
     }
+  }
+
+  handleResize() {
+     this.setState({windowSize: {
+       width: window.innerWidth,
+       height: window.innerHeight,
+     }});
+  }
+
+  componentWillMount() {
+    window.addEventListener("resize", () => this.handleResize());
+  }
+
+  componentWillUnmount() {
+    window.addEventListener("resize", () => this.handleResize());
   }
 
   updateBookState(book_index) {
@@ -26,6 +45,16 @@ class Main extends React.Component {
       books[book_index].max = max;
       this.setState({books: books})
     }
+  }
+
+  removeBook(book_index) {
+    let books = this.state.books.slice();
+    books.splice(book_index, 1);
+    this.setState({
+      books: books
+    });
+    // Then congrats you finished a book!
+    this.spawnConfetti();
   }
 
   showAddBookModal() {
@@ -40,11 +69,36 @@ class Main extends React.Component {
     this.setState({books: books, showAddModal: false})
   }
 
+  spawnConfetti() {
+    this.setState({
+      showConfetti: true
+    });
+  }
+
+  onConfettiComplete(confetti) {
+    this.setState({ showConfetti: false })
+    confetti.reset();
+  }
+
   render() {
+    const width = this.state.windowSize.width;
+    const height = this.state.windowSize.height;
+
     return (
       <Container>
+        <Confetti
+          width={width}
+          height={height}
+          recycle={false}
+          numberOfPieces={this.state.showConfetti ? 500 : 0}
+          onConfettiComplete={(confetti) => this.onConfettiComplete(confetti)}
+        />
         <FloatingBookTitle />
-        <BookList books={this.state.books} updateBook={(index) => this.updateBookState(index)}/>
+        <BookList
+          books={this.state.books}
+          updateBook={(index) => this.updateBookState(index)}
+          removeBook={(index) => this.removeBook(index)}
+        />
         <AddBook handleNewBook={() => this.showAddBookModal()}/>
         <AddBookModal
           show={this.state.showAddModal}
@@ -56,4 +110,4 @@ class Main extends React.Component {
   }
 }
 
-export default Main;
+export default ReactTimeout(Main);

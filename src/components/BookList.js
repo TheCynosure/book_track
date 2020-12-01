@@ -1,12 +1,8 @@
 import React from 'react';
 import {Collapse, Button, FormControl, ListGroup, Container, Row, Col, ProgressBar, InputGroup} from 'react-bootstrap';
-import {PencilSquare} from 'react-bootstrap-icons';
+import {PencilSquare, Check} from 'react-bootstrap-icons';
 
 class BookConfiguration extends React.Component {
-  constructor(props) {
-    super(props); 
-  }
-
   handleProgressChange(event) {
     if (isNaN(Number(event.target.value))) {
       return;
@@ -66,15 +62,52 @@ class BookInformation extends React.Component {
     this.state = {
       book: props.book,
       active: false,
+      complete: props.book.progress == props.book.max,
     }
   }
 
   onClick() {
-    this.setState({active: !this.state.active});
+    if (this.state.complete) {
+      console.log("Removing!");
+      this.props.removeBook();
+    } else {
+      this.setState({active: !this.state.active});
+      if (this.state.active && this.state.book.progress == this.state.book.max) {
+        this.setState({complete: true})
+      }
+    }
   }
 
   handleInput() {
     return; 
+  }
+
+  buildButton() {
+    if (this.state.complete) {
+      // A check button to trigger adding to the completed list.
+      return (
+        <Button
+          variant={"success"}
+          className="btn-sm"
+          onClick={() => this.onClick()}
+        >
+          <Check />
+        </Button>
+      );
+    } else {
+      // Otherwise the button to trigger the collapse section.
+      return (
+        <Button
+          variant={this.state.active? "secondary" : "primary"} 
+          onClick={() => this.onClick()}
+          aria-controls="book-config-collapse"
+          aria-expanded={this.state.active}
+          className="btn-sm"
+        >
+          <PencilSquare />
+        </Button>
+      );
+    }
   }
 
   render() {
@@ -95,15 +128,7 @@ class BookInformation extends React.Component {
                 style={{width: "100%"}}/>
             </Col>
             <Col xs={1}>
-              <Button
-                variant={this.state.active? "secondary" : "primary"} 
-                onClick={() => this.onClick()}
-                aria-controls="book-config-collapse"
-                aria-expanded={this.state.active}
-                className="btn-sm"
-              >
-                <PencilSquare />
-              </Button>
+              {this.buildButton()}
             </Col>
           </Row>
           <Row>
@@ -152,6 +177,7 @@ class BookList extends React.Component {
                 <BookInformation
                   book={book}
                   updateBook={(progress, max) => this.props.updateBook(index)(progress, max)}
+                  removeBook={() => this.props.removeBook(index)}
                 />
               )}
             </ListGroup>
