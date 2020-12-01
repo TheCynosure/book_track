@@ -8,7 +8,7 @@ export default class AddBook extends React.Component {
       <Container>
         <Row className="text-center">
           <Col>
-            <Button className="mt-3 btn-sm" onClick={() => this.props.handleNewBook()}><PlusSquare/></Button>
+            <Button className="mt-3 mb-3 btn-sm" onClick={() => this.props.handleNewBook()}><PlusSquare/></Button>
           </Col>
         </Row>
       </Container>

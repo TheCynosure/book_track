@@ -12,8 +12,10 @@ export default class AddBookModal extends React.Component {
   }
 
   onTitleChange(event) {
-    if (event.target.value === null || event.target.value.length == 0) {
-      this.setState({isInputValid: false});
+    if (event.target.value === null ||
+        event.target.value.length === 0 ||
+        !this.props.checkValid(event.target.value)) {
+      this.setState({title: event.target.value, isInputValid: false});
       return;
     }
     this.setState({title: event.target.value, isInputValid: true});
@@ -57,7 +59,6 @@ export default class AddBookModal extends React.Component {
                     </InputGroup.Text>
                   </InputGroup.Prepend>
                   <FormControl
-                    placeholder={this.props.progress}
                     onChange={(event) => this.onTitleChange(event)}
                   />
                 </InputGroup>
@@ -72,7 +73,7 @@ export default class AddBookModal extends React.Component {
                     </InputGroup.Text>
                   </InputGroup.Prepend>
                   <FormControl
-                    placeholder={this.props.max}
+                    placeholder={1}
                     onChange={(event) => this.onMaxChange(event)} 
                   />
                 </InputGroup>
