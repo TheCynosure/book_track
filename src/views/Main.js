@@ -1,5 +1,7 @@
 import React from 'react';
+import FloatingBookTitle from '../components/FloatingBookTitle';
 import BookList from '../components/BookList';
+import {Container} from 'react-bootstrap';
 
 class Main extends React.Component {
   
@@ -14,8 +16,22 @@ class Main extends React.Component {
     }
   }
 
+  updateBookState(book_index) {
+    return (progress, max) => {
+      let books = this.state.books.slice();
+      books[book_index].progress = progress;
+      books[book_index].max = max;
+      this.setState({books: books})
+    }
+  }
+
   render() {
-    return <BookList books={this.state.books}/>;
+    return (
+      <Container>
+        <FloatingBookTitle />
+        <BookList books={this.state.books} updateBook={(index) => this.updateBookState(index)}/>
+      </Container>
+    );
   }
 }
 

@@ -1,9 +1,27 @@
 import React from 'react';
 import {Collapse, Button, FormControl, ListGroup, Container, Row, Col, ProgressBar, InputGroup} from 'react-bootstrap';
+import {PencilSquare} from 'react-bootstrap-icons';
 
 class BookConfiguration extends React.Component {
   constructor(props) {
     super(props); 
+  }
+
+  handleProgressChange(event) {
+    if (isNaN(Number(event.target.value))) {
+      return;
+    }
+    if (Number(event.target.value) > this.props.max) {
+      event.target.value = this.props.max;
+    }
+    this.props.updateBook(event.target.value, this.props.max);
+  }
+
+  handleMaxChange(event) {
+    if (isNaN(Number(event.target.value))) {
+      return;
+    }
+    this.props.updateBook(this.props.progress, event.target.value);
   }
 
   render() {
@@ -19,6 +37,7 @@ class BookConfiguration extends React.Component {
               </InputGroup.Prepend>
               <FormControl
                 placeholder={this.props.progress}
+                onChange={(event) => this.handleProgressChange(event)}
               />
             </InputGroup>
           </Col>
@@ -31,6 +50,7 @@ class BookConfiguration extends React.Component {
               </InputGroup.Prepend>
               <FormControl
                 placeholder={this.props.max}
+                onChange={(event) => this.handleMaxChange(event)}
               />
             </InputGroup>
           </Col>
@@ -67,8 +87,9 @@ class BookInformation extends React.Component {
             </Col>
             <Col sm={1}>
             </Col>
-            <Col sm={6}>
+            <Col sm={7}>
               <ProgressBar
+                variant={this.state.book.progress >= this.state.book.max? "success" : "info"}
                 now={(this.state.book.progress/this.state.book.max) * 100}
                 label={(this.state.book.progress/this.state.book.max) * 100 + '%'}
                 style={{width: "100%"}}/>
@@ -81,7 +102,7 @@ class BookInformation extends React.Component {
                 aria-expanded={this.state.active}
                 className="btn-sm"
               >
-                {this.state.active? 'Close' : 'Edit'}
+                <PencilSquare />
               </Button>
             </Col>
           </Row>
@@ -90,7 +111,11 @@ class BookInformation extends React.Component {
               <Collapse in={this.state.active}>
                 <div id="book-config-collapse"> 
                   <div className="p-3">
-                    <BookConfiguration handleInput={() => this.handleInput()} {...this.state.book}/>
+                    <BookConfiguration
+                      handleInput={() => this.handleInput()}
+                      updateBook={(p, m) => this.props.updateBook(p, m)}
+                      {...this.state.book}
+                    />
                   </div>
                 </div>
               </Collapse>
@@ -124,7 +149,10 @@ class BookList extends React.Component {
           <Col>
             <ListGroup>
               {this.props.books.map((book, index) => 
-                <BookInformation book={book} />
+                <BookInformation
+                  book={book}
+                  updateBook={(progress, max) => this.props.updateBook(index)(progress, max)}
+                />
               )}
             </ListGroup>
           </Col>
