@@ -110,7 +110,7 @@ class BookInformation extends React.Component {
             <Col>
               <Collapse in={this.state.active}>
                 <div id="book-config-collapse"> 
-                  <div className="p-3">
+                  <div className="pt-3 pb-3">
                     <BookConfiguration
                       handleInput={() => this.handleInput()}
                       updateBook={(p, m) => this.props.updateBook(p, m)}
