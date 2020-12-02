@@ -6,7 +6,7 @@ export default class AddBookModal extends React.Component {
     super(props);
     this.state = {
       title: '',
-      max_page: 1,
+      length: 1,
       isInputValid: false,
     }
   }
@@ -22,20 +22,18 @@ export default class AddBookModal extends React.Component {
   }
 
   onMaxChange(event) {
-    if (isNaN(Number(event.target.value))) {
-      event.target.value = 0;
+    if (isNaN(Number(event.target.value)) || Number(event.target.value) <= 0) {
+      this.setState({length: 1, isInputValid: false});
+      return;
     }
-    if (Number(event.target.value) <= 0) {
-      event.target.value = 1;
-    }
-    this.setState({max_page: event.target.value});
+    this.setState({length: event.target.value, isInputValid: true});
   }
 
   handleSubmit() {
     let title = this.state.title;
-    let max_page = this.state.max_page;
-    this.setState({title: '', max_page: 1, isInputValid: false});
-    this.props.onAdd(title, max_page);
+    let length = this.state.length;
+    this.setState({title: '', length: 1, isInputValid: false});
+    this.props.onAdd(title, length);
   }
 
   render() {
@@ -73,7 +71,6 @@ export default class AddBookModal extends React.Component {
                     </InputGroup.Text>
                   </InputGroup.Prepend>
                   <FormControl
-                    placeholder={1}
                     onChange={(event) => this.onMaxChange(event)} 
                   />
                 </InputGroup>

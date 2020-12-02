@@ -1,0 +1,12 @@
+@keyframes rotateAnimation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.TitleBook[animate='1'] {
+  animation: rotateAnimation 2s 1;
+}

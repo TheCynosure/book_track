@@ -14,7 +14,7 @@ export default function BookList(props) {
             {props.books.map((book, index) => 
               <BookInfoListGroup
                 book={book}
-                updateBook={(current_page, length) => props.updateBook(index)(current_page, length)}
+                updateBook={(current_page, length) => props.updateBook(book.title)(current_page, length)}
                 removeBook={() => props.removeBook(book.title)}
                 finishBook={() => props.finishBook(book.title)}
                 key={book.title}

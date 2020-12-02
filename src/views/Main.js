@@ -29,7 +29,7 @@ class Main extends React.Component {
      }});
   }
 
-  componentWillMount() {
+  componentDidMount() {
     window.addEventListener("resize", () => this.handleResize());
   }
 
@@ -41,7 +41,6 @@ class Main extends React.Component {
     fetch("http://localhost:8080/books")
       .then(res => res.json())
       .then((result) => {
-        console.log(result)
         this.setState({books: result, isLoaded: true});
       },
       (error) => {
@@ -50,19 +49,22 @@ class Main extends React.Component {
 
   }
 
-  updateBookState(book_index) {
-    return (progress, max) => {
+  updateBookState(book_title) {
+    return (new_current_page, new_length) => {
       let books = this.state.books.slice();
-      books[book_index].progress = progress;
-      books[book_index].max = max;
+      const book_to_update =
+          books.find(book => book.title === book_title);
+      book_to_update.current_page = new_current_page;
+      book_to_update.length = new_length;
       this.setState({books: books})
     }
   }
 
   removeBook(book_title) {
     let books = this.state.books.slice();
-    let finished_book = books.filter(curr_book => curr_book.name === book_title);
-    books = books.filter(curr_book => curr_book.name !== book_title);
+    let finished_book =
+        books.filter(curr_book => curr_book.title === book_title);
+    books = books.filter(curr_book => curr_book.title !== book_title);
     this.setState({
       books: books
     });
@@ -87,7 +89,7 @@ class Main extends React.Component {
   addBook(name, max_page) {
     let books = this.state.books.slice();
     books = books.concat([
-      {name: name, progress: 0, max: max_page}
+      {title: name, current_page: 0, length: max_page}
     ])
     this.setState({books: books, showAddModal: false})
   }
@@ -105,6 +107,31 @@ class Main extends React.Component {
 
   isNewBookValid(title) {
     return this.state.books.filter((curr) => curr.name === title).length === 0
+  }
+
+  renderBookHistory() {
+    if (this.state.history.length > 0) {
+      return (
+        <Container className="p-0">
+          <Row className="p-0">
+            <Col>
+              <ReadCount
+                  current={this.state.history.length}
+                  total={this.state.history.length + this.state.books.length}
+              />
+            </Col>
+          </Row>
+          <Row className="p-0">
+            <Col>
+              <BookList
+                  books={this.state.history}
+                  disabled={true}
+              />
+            </Col>
+          </Row>
+        </Container>
+      );
+    }
   }
 
   renderMainScreen() {
@@ -137,14 +164,7 @@ class Main extends React.Component {
             finishBook={(index) => this.finishBook(index)}
           />
           <AddBook handleNewBook={() => this.showAddBookModal()}/>
-          <ReadCount
-            current={this.state.history.length}
-            total={this.state.history.length + this.state.books.length}
-          />
-          <BookList
-            books={this.state.history}
-            disabled={true}
-          />
+          {this.renderBookHistory()}
           <AddBookModal
             show={this.state.showAddModal}
             onAdd={(title, length) => this.addBook(title, length)}

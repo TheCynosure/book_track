@@ -3,26 +3,26 @@ import {Collapse, Button, FormControl, ListGroup, Container, Row, Col, ProgressB
 import {PencilSquare, Check, Trash} from 'react-bootstrap-icons';
 import BookConfigContainer from './BookConfigContainer';
 
-function isComplete(props) {
-  return props.book.current_page == props.book.length;
+function isComplete(props, open) {
+  return (Number(props.book.current_page) === Number(props.book.length)) && !open;
 }
 
-function onClick(props, toggleCollapse) {
-  if (isComplete(props)) {
+function onClick(props, open, toggleCollapse) {
+  if (isComplete(props, open)) {
     props.finishBook();
   } else {
     toggleCollapse();
   }
 }
 
-function buildButton(props, toggleCollapse) {
-  if (isComplete(props)) {
+function renderButton(props, open, toggleCollapse) {
+  if (isComplete(props, open)) {
     // A check button to trigger adding to the completed list.
     return (
       <Button
         variant={"success"}
         className="btn-sm"
-        onClick={() => onClick(props, toggleCollapse)}
+        onClick={() => onClick(props, open, toggleCollapse)}
         disabled={props.disabled}
       >
         <Check />
@@ -32,10 +32,10 @@ function buildButton(props, toggleCollapse) {
     // Otherwise the button to trigger the collapse section.
     return (
       <Button
-        variant={props.active? "secondary" : "primary"} 
-        onClick={() => onClick(props, toggleCollapse)}
+        variant={open? "secondary" : "primary"}
+        onClick={() => onClick(props, open, toggleCollapse)}
         aria-controls="book-config-collapse"
-        aria-expanded={props.active}
+        aria-expanded={open}
         className="btn-sm"
         disabled={props.disabled}
       >
@@ -52,8 +52,6 @@ function removeBook(props) {
 
 export default function BookInfoListGroup(props) {
   let [open, setOpen] = useState(false)
-
-  console.log(props.book.length);
 
   return (
     <ListGroup.Item>
@@ -74,7 +72,7 @@ export default function BookInfoListGroup(props) {
             />
           </Col>
           <Col xs={1}>
-            {buildButton(props, () => setOpen(!open))}
+            {renderButton(props, open, () => setOpen(!open))}
           </Col>
         </Row>
         <Row>
@@ -85,8 +83,8 @@ export default function BookInfoListGroup(props) {
                   <BookConfigContainer
                     updateBook={(p, m) => props.updateBook(p, m)}
                     removeBook={() => removeBook(props)}
-                    progress={props.book.current_page}              
-                    max={props.book.length}
+                    current_page={props.book.current_page}
+                    length={props.book.length}
                   />
                 </div>
               </div>

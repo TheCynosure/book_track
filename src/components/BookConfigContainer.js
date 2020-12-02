@@ -9,14 +9,14 @@ function handleProgressChange(event, props) {
   if (Number(event.target.value) > props.length) {
     event.target.value = props.length;
   }
-  props.updateBook(event.target.value, props.length);
+  props.updateBook(Number(event.target.value), props.length);
 }
 
 function handleMaxChange(event, props) {
   if (isNaN(Number(event.target.value))) {
     return;
   }
-  props.updateBook(props.current_page, event.target.value);
+  props.updateBook(props.current_page, Number(event.target.value));
 }
 
 export default function BookConfigContainer(props) {
