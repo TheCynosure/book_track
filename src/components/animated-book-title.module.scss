@@ -1,21 +1,21 @@
 @keyframes rotateAnimation {
   0% {
-    transform: translateY(-10%) rotate(-5deg);
+    transform: translateY(0%);
   }
   25% {
-    transform: translateY(10%) rotate(5deg);
+    transform: translateY(20%);
   }
   50% {
-    transform: translateY(-10%) rotate(5deg);
+    transform: translateY(15%);
   }
   75% {
-    transform: translateY(10%) rotate(-5deg)
+    transform: translateY(20%);
   }
   100% {
-    transform: translateY(-10%) rotate(-5deg);
+    transform: translateY(0%);
   }
 }
 
 .TitleBook[animate='1'] {
-  animation: rotateAnimation 2s infinite;
+  animation: rotateAnimation 1s infinite;
 }

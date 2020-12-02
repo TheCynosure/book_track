@@ -19,6 +19,7 @@ class Main extends React.Component {
       windowSize: {width: undefined, height: undefined},
       showConfetti: false,
       isLoaded: false,
+      isSaved: true,
     }
   }
 
@@ -31,54 +32,96 @@ class Main extends React.Component {
 
   componentDidMount() {
     window.addEventListener("resize", () => this.handleResize());
+    this.getBooks();
   }
 
   componentWillUnmount() {
     window.addEventListener("resize", () => this.handleResize());
   }
 
-  componentDidMount() {
+  async getBooks() {
+    // Before the fetch make sure the page knows we are loading.
     fetch("http://localhost:8080/books")
       .then(res => res.json())
       .then((result) => {
         this.setState({books: result, isLoaded: true});
       },
       (error) => {
+        // TODO: We should retry on network error.
+        console.error(error);
         this.setState({isLoaded: true, error});
       });
-
   }
 
   updateBook(book_title) {
-    return (new_current_page, new_length) => {
+    return async (new_current_page, new_length) => {
       let books = this.state.books.slice();
       const book_to_update =
           books.find(book => book.title === book_title);
       book_to_update.current_page = new_current_page;
       book_to_update.length = new_length;
-      this.setState({books: books})
+
+      const headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+
+      const settings = {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify(book_to_update)
+      }
+
+      const request = new Request('http://localhost:8080/books', settings);
+      const response = await fetch(request);
+
+      if (response.status === 200) {
+        this.setState({ isSaved: true });
+        await this.getBooks();
+      }
     }
   }
 
-  removeBook(book_title) {
+  async removeBook(book_title) {
+    this.setState({ isSaved: false });
     let books = this.state.books.slice();
     let finished_book =
         books.filter(curr_book => curr_book.title === book_title);
-    books = books.filter(curr_book => curr_book.title !== book_title);
-    this.setState({
-      books: books
-    });
+    if (finished_book.length === 0) {
+      console.error('No matching book for one deleted.');
+      return;
+    }
+    console.log(finished_book[0].title)
+
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    const settings = {
+      method: 'DELETE',
+      headers,
+      body: JSON.stringify(finished_book[0])
+    }
+
+    const request = new Request('http://localhost:8080/books', settings);
+    const response = await fetch(request);
+
+    if (response.status === 200) {
+      this.setState({ isSaved: true });
+      await this.getBooks();
+    }
+
     return finished_book;
   }
 
   finishBook(book_title) {
-    let finished_book = this.removeBook(book_title);
-    this.spawnConfetti();
-    let history = this.state.history;
-    // Doing the concat this direction so finished book is at the beginning.
-    history = finished_book.concat(history)
-    this.setState({
-      history: history,
+    let finished_book =
+        this.state.books.filter(book => book.title === book_title);
+    this.removeBook(book_title).then(() => {
+      this.spawnConfetti();
+      let history = this.state.history;
+      // Doing the concat this direction so finished book is at the beginning.
+      history = finished_book.concat(history)
+      this.setState({
+        history: history,
+      });
     });
   }
 
@@ -86,12 +129,27 @@ class Main extends React.Component {
     this.setState({showAddModal: true});
   }
 
-  addBook(name, max_page) {
-    let books = this.state.books.slice();
-    books = books.concat([
-      {title: name, current_page: 0, length: max_page}
-    ])
-    this.setState({books: books, showAddModal: false})
+  async addBook(name, max_page) {
+    this.setState({ isSaved: false });
+    // We are going to post the new book, and on success re-fetch all the data.
+    const new_book = {title: name, current_page: 0, length: max_page};
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    const settings = {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(new_book)
+    }
+
+    this.setState({showAddModal: false});
+    const request = new Request('http://localhost:8080/books', settings);
+    const response = await fetch(request);
+
+    if (response.status === 200) {
+      this.setState({ isSaved: true });
+      await this.getBooks();
+    }
   }
 
   spawnConfetti() {
@@ -179,7 +237,7 @@ class Main extends React.Component {
   render() {
     return (
       <Container>
-        <BookIconHeader animate={1}/>
+        <BookIconHeader animate={!this.state.isSaved}/>
         {this.renderMainScreen()}
       </Container>
     );
