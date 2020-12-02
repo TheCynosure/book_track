@@ -19,7 +19,6 @@ class Main extends React.Component {
       windowSize: {width: undefined, height: undefined},
       showConfetti: false,
       isLoaded: false,
-      isSaved: true,
     }
   }
 
@@ -32,19 +31,39 @@ class Main extends React.Component {
 
   componentDidMount() {
     window.addEventListener("resize", () => this.handleResize());
-    this.getBooks();
+    this.getAllBooks();
   }
 
   componentWillUnmount() {
     window.addEventListener("resize", () => this.handleResize());
   }
 
-  async getBooks() {
+  async getAllBooks() {
+    await this.getBooks();
+    await this.getBooks(true);
+  }
+
+  async getBooks(fromHistory=false) {
     // Before the fetch make sure the page knows we are loading.
-    fetch("http://localhost:8080/books")
-      .then(res => res.json())
-      .then((result) => {
-        this.setState({books: result, isLoaded: true});
+    const location =
+        'http://localhost:8080/' + ((fromHistory)? 'history' : 'books');
+    fetch(location).then((res) => {
+        if (res.status === 304) {
+          // There is nothing to change
+          this.setState({ isLoaded: false });
+        } else {
+          res.json().then((result) => {
+            // Response was successful!
+            if (fromHistory) {
+              this.setState({ history: result, isLoaded: true });
+            } else {
+              this.setState({ books: result, isLoaded: true });
+            }
+          }).catch((error) => {
+            console.log(error)
+            this.setState({ isLoaded: true, error });
+          });
+        }
       },
       (error) => {
         // TODO: We should retry on network error.
@@ -74,14 +93,14 @@ class Main extends React.Component {
       const response = await fetch(request);
 
       if (response.status === 200) {
-        this.setState({ isSaved: true });
-        await this.getBooks();
+        this.setState({ isLoaded: true });
+        await this.getAllBooks();
       }
     }
   }
 
   async removeBook(book_title) {
-    this.setState({ isSaved: false });
+    this.setState({ isLoaded: false });
     let books = this.state.books.slice();
     let finished_book =
         books.filter(curr_book => curr_book.title === book_title);
@@ -104,8 +123,8 @@ class Main extends React.Component {
     const response = await fetch(request);
 
     if (response.status === 200) {
-      this.setState({ isSaved: true });
-      await this.getBooks();
+      this.setState({ isLoaded: true });
+      await this.getAllBooks();
     }
 
     return finished_book;
@@ -113,15 +132,10 @@ class Main extends React.Component {
 
   finishBook(book_title) {
     let finished_book =
-        this.state.books.filter(book => book.title === book_title);
+        this.state.books.filter(book => book.title === book_title)[0];
     this.removeBook(book_title).then(() => {
       this.spawnConfetti();
-      let history = this.state.history;
-      // Doing the concat this direction so finished book is at the beginning.
-      history = finished_book.concat(history)
-      this.setState({
-        history: history,
-      });
+      this.addBook(finished_book.title, finished_book.length, true);
     });
   }
 
@@ -129,10 +143,14 @@ class Main extends React.Component {
     this.setState({showAddModal: true});
   }
 
-  async addBook(name, max_page) {
-    this.setState({ isSaved: false });
+  async addBook(title, length, toHistory=false) {
+    this.setState({ isLoaded: false });
     // We are going to post the new book, and on success re-fetch all the data.
-    const new_book = {title: name, current_page: 0, length: max_page};
+    const new_book = {
+      title: title,
+      current_page: (toHistory)? length : 0,
+      length: length
+    };
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
@@ -142,13 +160,16 @@ class Main extends React.Component {
       body: JSON.stringify(new_book)
     }
 
+    const location =
+        "http://localhost:8080/" + ((toHistory)? "history" : "books");
+
     this.setState({showAddModal: false});
-    const request = new Request('http://localhost:8080/books', settings);
+    const request = new Request(location, settings);
     const response = await fetch(request);
 
     if (response.status === 200) {
-      this.setState({ isSaved: true });
-      await this.getBooks();
+      this.setState({ isLoaded: true });
+      await this.getAllBooks();
     }
   }
 
@@ -193,51 +214,39 @@ class Main extends React.Component {
   }
 
   renderMainScreen() {
-    if (!this.state.isLoaded) {
-      return (
-        <Container>
-          <Row className="justify-content-center">
-            <Col sm={1} style={{ textAlign: 'center'}}>
-              <Spinner animation="grow"/>
-            </Col>
-          </Row>
-        </Container>
-      );
-    } else {
-      const width = this.state.windowSize.width;
-      const height = this.state.windowSize.height;
-      return (
-        <Container>
-          <Confetti
-            width={width}
-            height={height}
-            recycle={false}
-            numberOfPieces={this.state.showConfetti ? 500 : 0}
-            onConfettiComplete={(confetti) => this.onConfettiComplete(confetti)}
-          />
-          <BookList
-            books={this.state.books}
-            updateBook={(index) => this.updateBook(index)}
-            removeBook={(index) => this.removeBook(index)}
-            finishBook={(index) => this.finishBook(index)}
-          />
-          <NewBookButton handleNewBook={() => this.promptNewBookModal()}/>
-          {this.renderBookHistory()}
-          <NewBookCreationModal
-            show={this.state.showAddModal}
-            onAdd={(title, length) => this.addBook(title, length)}
-            onCancel={() => this.setState({showAddModal: false})}
-            checkValid={(title) => this.isTitleUnique(title)}
-          />
-        </Container>
-      );
-    }
+    const width = this.state.windowSize.width;
+    const height = this.state.windowSize.height;
+    return (
+      <Container>
+        <Confetti
+          width={width}
+          height={height}
+          recycle={false}
+          numberOfPieces={this.state.showConfetti ? 500 : 0}
+          onConfettiComplete={(confetti) => this.onConfettiComplete(confetti)}
+        />
+        <BookList
+          books={this.state.books}
+          updateBook={(index) => this.updateBook(index)}
+          removeBook={(index) => this.removeBook(index)}
+          finishBook={(index) => this.finishBook(index)}
+        />
+        <NewBookButton handleNewBook={() => this.promptNewBookModal()}/>
+        {this.renderBookHistory()}
+        <NewBookCreationModal
+          show={this.state.showAddModal}
+          onAdd={(title, length) => this.addBook(title, length)}
+          onCancel={() => this.setState({showAddModal: false})}
+          checkValid={(title) => this.isTitleUnique(title)}
+        />
+      </Container>
+    );
   }
 
   render() {
     return (
       <Container>
-        <BookIconHeader animate={!this.state.isSaved}/>
+        <BookIconHeader/>
         {this.renderMainScreen()}
       </Container>
     );
