@@ -7,7 +7,8 @@ export default class AddBookModal extends React.Component {
     this.state = {
       title: '',
       length: 1,
-      isInputValid: false,
+      isTitleInputValid: false,
+      isLengthInputValid: false,
     }
   }
 
@@ -15,24 +16,29 @@ export default class AddBookModal extends React.Component {
     if (event.target.value === null ||
         event.target.value.length === 0 ||
         !this.props.checkValid(event.target.value)) {
-      this.setState({title: event.target.value, isInputValid: false});
+      this.setState({title: event.target.value, isTitleInputValid: false});
       return;
     }
-    this.setState({title: event.target.value, isInputValid: true});
+    this.setState({title: event.target.value, isTitleInputValid: true});
   }
 
   onMaxChange(event) {
     if (isNaN(Number(event.target.value)) || Number(event.target.value) <= 0) {
-      this.setState({length: 1, isInputValid: false});
+      this.setState({length: 1, isLengthInputValid: false});
       return;
     }
-    this.setState({length: event.target.value, isInputValid: true});
+    this.setState({length: event.target.value, isLengthInputValid: true});
   }
 
   handleSubmit() {
     let title = this.state.title;
     let length = this.state.length;
-    this.setState({title: '', length: 1, isInputValid: false});
+    this.setState({
+      title: '',
+      length: 1,
+      isTitleInputValid: false,
+      isLengthInputValid: false
+    });
     this.props.onAdd(title, length);
   }
 
@@ -85,8 +91,7 @@ export default class AddBookModal extends React.Component {
           <Button
             variant="primary"
             onClick={() => this.handleSubmit()}
-            active={this.state.isInputValid}
-            disabled={!this.state.isInputValid}
+            disabled={!(this.state.isTitleInputValid && this.state.isLengthInputValid)}
           >
             Add
           </Button>

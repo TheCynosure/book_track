@@ -106,7 +106,7 @@ class Main extends React.Component {
   }
 
   isNewBookValid(title) {
-    return this.state.books.filter((curr) => curr.name === title).length === 0
+    return this.state.books.filter((curr) => curr.title === title).length === 0
   }
 
   renderBookHistory() {
