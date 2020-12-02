@@ -2,7 +2,7 @@ import React from 'react';
 import {Container, Button, Row, Col} from 'react-bootstrap';
 import {PlusSquare} from 'react-bootstrap-icons';
 
-export default class AddBook extends React.Component {
+export default class NewBookButton extends React.Component {
   render() {
     return (
       <Container>

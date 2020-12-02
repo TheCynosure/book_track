@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, Modal, Container, Row, Col, InputGroup, FormControl} from 'react-bootstrap';
 
-export default class AddBookModal extends React.Component {
+export default class NewBookCreationModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

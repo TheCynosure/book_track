@@ -1,7 +1,7 @@
 import React from 'react';
 import {Container, ProgressBar} from 'react-bootstrap';
 
-export default function ReadCount(props) {
+export default function ReadingGoalProgressBar(props) {
   return (
     <Container className="w-100 mt-3 mb-3">
       <ProgressBar

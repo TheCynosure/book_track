@@ -1,12 +1,12 @@
 import React from 'react';
-import FloatingBookTitle from '../components/FloatingBookTitle';
+import BookIconHeader from '../components/BookIconHeader';
 import BookList from '../components/BookList';
 import {Container, Spinner, Row, Col} from 'react-bootstrap';
-import AddBook from '../components/AddBook';
-import AddBookModal from '../components/AddBookModal';
+import NewBookButton from '../components/NewBookButton';
+import NewBookCreationModal from '../components/NewBookCreationModal';
 import Confetti from 'react-confetti';
 import ReactTimeout from 'react-timeout';
-import ReadCount from '../components/ReadCount';
+import ReadingGoalProgressBar from '../components/ReadingGoalProgressBar';
 
 class Main extends React.Component {
   
@@ -49,7 +49,7 @@ class Main extends React.Component {
 
   }
 
-  updateBookState(book_title) {
+  updateBook(book_title) {
     return (new_current_page, new_length) => {
       let books = this.state.books.slice();
       const book_to_update =
@@ -82,7 +82,7 @@ class Main extends React.Component {
     });
   }
 
-  showAddBookModal() {
+  promptNewBookModal() {
     this.setState({showAddModal: true});
   }
 
@@ -105,7 +105,7 @@ class Main extends React.Component {
     confetti.reset();
   }
 
-  isNewBookValid(title) {
+  isTitleUnique(title) {
     return this.state.books.filter((curr) => curr.title === title).length === 0
   }
 
@@ -115,7 +115,7 @@ class Main extends React.Component {
         <Container className="p-0">
           <Row className="p-0">
             <Col>
-              <ReadCount
+              <ReadingGoalProgressBar
                   current={this.state.history.length}
                   total={this.state.history.length + this.state.books.length}
               />
@@ -159,17 +159,17 @@ class Main extends React.Component {
           />
           <BookList
             books={this.state.books}
-            updateBook={(index) => this.updateBookState(index)}
+            updateBook={(index) => this.updateBook(index)}
             removeBook={(index) => this.removeBook(index)}
             finishBook={(index) => this.finishBook(index)}
           />
-          <AddBook handleNewBook={() => this.showAddBookModal()}/>
+          <NewBookButton handleNewBook={() => this.promptNewBookModal()}/>
           {this.renderBookHistory()}
-          <AddBookModal
+          <NewBookCreationModal
             show={this.state.showAddModal}
             onAdd={(title, length) => this.addBook(title, length)}
             onCancel={() => this.setState({showAddModal: false})}
-            checkValid={(title) => this.isNewBookValid(title)}
+            checkValid={(title) => this.isTitleUnique(title)}
           />
         </Container>
       );
@@ -179,7 +179,7 @@ class Main extends React.Component {
   render() {
     return (
       <Container>
-        <FloatingBookTitle />
+        <BookIconHeader animate={1}/>
         {this.renderMainScreen()}
       </Container>
     );

@@ -1,7 +1,7 @@
 import {React, useState} from 'react';
 import {Collapse, Button, FormControl, ListGroup, Container, Row, Col, ProgressBar, InputGroup} from 'react-bootstrap';
 import {PencilSquare, Check, Trash} from 'react-bootstrap-icons';
-import BookConfigContainer from './BookConfigContainer';
+import BookPageConfigForm from './BookPageConfigForm';
 
 function isComplete(props, open) {
   return (Number(props.book.current_page) === Number(props.book.length)) && !open;
@@ -50,7 +50,7 @@ function removeBook(props) {
   props.removeBook();
 }
 
-export default function BookInfoListGroup(props) {
+export default function BookListEntry(props) {
   let [open, setOpen] = useState(false)
 
   return (
@@ -80,7 +80,7 @@ export default function BookInfoListGroup(props) {
             <Collapse in={open}>
               <div id="book-config-collapse"> 
                 <div className="pt-3 pb-3">
-                  <BookConfigContainer
+                  <BookPageConfigForm
                     updateBook={(p, m) => props.updateBook(p, m)}
                     removeBook={() => removeBook(props)}
                     current_page={props.book.current_page}

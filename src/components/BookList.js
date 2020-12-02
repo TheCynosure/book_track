@@ -1,6 +1,6 @@
 import React from 'react';
 import {Container, Row, Col, ListGroup, InputGroup} from 'react-bootstrap';
-import BookInfoListGroup from '../components/BookInfoListGroup'; 
+import BookListEntry from './BookListEntry';
 
 export default function BookList(props) {
   // If active then render the extra information.
@@ -12,7 +12,7 @@ export default function BookList(props) {
         <Col>
           <ListGroup>
             {props.books.map((book, index) => 
-              <BookInfoListGroup
+              <BookListEntry
                 book={book}
                 updateBook={(current_page, length) => props.updateBook(book.title)(current_page, length)}
                 removeBook={() => props.removeBook(book.title)}

@@ -19,7 +19,7 @@ function handleMaxChange(event, props) {
   props.updateBook(props.current_page, Number(event.target.value));
 }
 
-export default function BookConfigContainer(props) {
+export default function BookPageConfigForm(props) {
   return (
     <Container className="w-100 p-0">
       <hr></hr>
