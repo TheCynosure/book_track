@@ -9,5 +9,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="book_track_backend" />
+    <orderEntry type="module" module-name="book_track_backend" />
   </component>
 </module>

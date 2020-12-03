@@ -36,7 +36,7 @@ export default class BookListEntry extends React.Component {
     this.setState({
       style: {
         opacity: 1,
-        transition: 'all 1s ease'
+        transition: 'all .7s ease'
       }
     })
   }
@@ -47,7 +47,7 @@ export default class BookListEntry extends React.Component {
       open: false,
       style: {
         opacity: 0,
-        transition: 'all 1s ease'
+        transition: 'all .7s ease'
       }
     });
   }
