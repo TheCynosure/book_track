@@ -1,5 +1,5 @@
 import React from 'react';
-import BookIconHeader from '../components/BookIconHeader';
+import IconHeader from '../components/IconHeader';
 import BookList from '../components/BookList';
 import {Container, Spinner, Row, Col} from 'react-bootstrap';
 import NewBookButton from '../components/NewBookButton';
@@ -246,7 +246,6 @@ class Main extends React.Component {
   render() {
     return (
       <Container>
-        <BookIconHeader/>
         {this.renderMainScreen()}
       </Container>
     );

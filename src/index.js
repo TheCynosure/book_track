@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Main from './views/Main';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Header from "./views/Header";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Main />
+    <Header />
   </React.StrictMode>,
   document.getElementById('root')
 );
