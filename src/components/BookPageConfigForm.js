@@ -1,6 +1,6 @@
 import React from 'react';
 import {Collapse, Button, FormControl, ListGroup, Container, Row, Col, ProgressBar, InputGroup} from 'react-bootstrap';
-import {PencilSquare, Check, Trash} from 'react-bootstrap-icons';
+import {PencilSquare, Check, Trash, Globe} from 'react-bootstrap-icons';
 
 function handleProgressChange(event, props) {
   if (isNaN(Number(event.target.value))) {
@@ -23,9 +23,9 @@ export default function BookPageConfigForm(props) {
   return (
     <Container className="w-100 p-0">
       <hr></hr>
-      <Row className="pt-3 pb-3">  
+      <Row className="pt-3 pb-3 align-items-center">
         <Col sm={3}>
-          <InputGroup>
+          <InputGroup size="sm">
             <InputGroup.Prepend>
               <InputGroup.Text>
                 Page #
@@ -38,7 +38,7 @@ export default function BookPageConfigForm(props) {
           </InputGroup>
         </Col>
         <Col sm={3}>
-          <InputGroup>
+          <InputGroup size="sm">
             <InputGroup.Prepend>
               <InputGroup.Text>
                 Max Page #
@@ -50,7 +50,21 @@ export default function BookPageConfigForm(props) {
             />
           </InputGroup>
         </Col>
-        <Col md={{ span: 1, offset: 5}}>
+        {(props.link === '')? <></> :
+            <Col md={{ span: 1 }}>
+              <Button
+                variant="info"
+                className="btn-sm"
+                href={props.link}
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.open(props.link);
+                }}
+              >
+                <Globe />
+              </Button>
+            </Col>}
+        <Col md={{ span: 1, offset: (props.link === '')? 5 : 4 }}>
           <Button
             variant="danger"
             className="btn-sm"

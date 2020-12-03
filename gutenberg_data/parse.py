@@ -1,4 +1,5 @@
 import re
+import json
 
 index = open('GUTINDEX.ALL', 'r')
 
@@ -31,7 +32,6 @@ for line in index.readlines():
     # then this is a new line, add the old text part to the index.
     if len(line_parts) > 1 and str.isnumeric(line_parts[1]) and current_number != 0:
         title = getTitle(current_text_part)
-        print(title[0].strip())
         titles[title[0]] = current_number 
     # We are not at end of line, add to current text part
     if len(line_parts) == 1 and not current_text_part.startswith('['):
@@ -41,5 +41,11 @@ for line in index.readlines():
         current_text_part = line_parts[0]
 
 title = getTitle(current_text_part)
-print(title[0].strip())
-titles[title] = current_number 
+titles[title[0]] = current_number 
+
+json_arr = []
+for key, val in titles.items():
+    json_arr.append({ "title": key, "number": val });
+
+with open("titles.json", "w") as write_file:
+    json.dump({ "books": json_arr }, write_file)

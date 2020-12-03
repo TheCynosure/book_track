@@ -150,8 +150,9 @@ export default class BookListEntry extends React.Component {
                       <BookPageConfigForm
                           updateBook={(p, m) => this.props.updateBook(p, m) }
                           removeBook={() => this.invisibleStyle(() => this.props.removeBook()) }
-                          current_page={this.props.book.current_page}
-                          length={this.props.book.length}
+                          // current_page={this.props.book.current_page}
+                          // length={this.props.book.length}
+                          {...this.props.book}
                       />
                     </div>
                   </div>

@@ -50,6 +50,9 @@ export default class NewBookCreationModal extends React.Component {
   handleSubmit() {
     let title = this.state.title;
     let length = this.state.length;
+    let link = this.hasExactGBookMatch()?
+        'https://www.gutenberg.org/ebooks/' + this.getExactGBookMatches()[0].number:
+        '';
     this.setState({
       title: '',
       length: 1,
@@ -57,13 +60,17 @@ export default class NewBookCreationModal extends React.Component {
       isLengthInputValid: false,
       possibleGBooks: []
     });
-    this.props.onAdd(title, length);
+    this.props.onAdd({ title: title, length: length, link: link });
   }
 
-  exactGBookMatch() {
+  hasExactGBookMatch() {
+    return this.getExactGBookMatches().length >= 1;
+  }
+
+  getExactGBookMatches() {
     return this.state.possibleGBooks.filter((book) => {
       return book.title === this.state.title;
-    }).length >= 1;
+    });
   }
 
   render() {
@@ -93,7 +100,7 @@ export default class NewBookCreationModal extends React.Component {
                     <InputGroup.Text>
                       <Globe className={
                         this.state.possibleGBooks.length > 0?
-                            (this.exactGBookMatch() ? "text-success" : "text-info"):
+                            (this.hasExactGBookMatch() ? "text-success" : "text-info"):
                             "text-secondary"}/>
                     </InputGroup.Text>
                   </InputGroup.Append>

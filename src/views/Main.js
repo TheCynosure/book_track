@@ -139,7 +139,7 @@ class Main extends React.Component {
             this.state.books.filter(book => book.title === book_title)[0];
         this.removeBook(book_title).then(() => {
             this.spawnConfetti();
-            this.addBook(finished_book.title, finished_book.length, true);
+            this.addBook(finished_book, true);
         });
     }
 
@@ -147,21 +147,17 @@ class Main extends React.Component {
         this.setState({showAddModal: true});
     }
 
-    async addBook(title, length, toHistory = false) {
+    async addBook(book, toHistory = false) {
         this.setState({isLoaded: false});
         // We are going to post the new book, and on success re-fetch all the data.
-        const new_book = {
-            title: title,
-            current_page: (toHistory) ? length : 0,
-            length: length
-        };
+        book.current_page = (toHistory)? book.length : 0;
         const headers = new Headers();
         headers.append('Content-Type', 'application/json');
 
         const settings = {
             method: 'POST',
             headers,
-            body: JSON.stringify(new_book)
+            body: JSON.stringify(book)
         }
 
         const location =
@@ -239,7 +235,7 @@ class Main extends React.Component {
                 {this.renderBookHistory()}
                 <NewBookCreationModal
                     show={this.state.showAddModal}
-                    onAdd={(title, length) => this.addBook(title, length)}
+                    onAdd={(book) => this.addBook(book)}
                     onCancel={() => this.setState({showAddModal: false})}
                     checkValid={(title) => this.isTitleUnique(title)}
                 />
