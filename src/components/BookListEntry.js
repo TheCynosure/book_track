@@ -7,7 +7,65 @@ export default class BookListEntry extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false
+      open: false,
+      show: true,
+      style: {
+        opacity: 0,
+      }
+    }
+  }
+
+  componentDidMount() {
+    // Shortly after mounting we will render the element visible.
+    setTimeout(() => this.visibleStyle(), 10);
+  }
+  //
+  // componentWillReceiveProps(newProps, nextContext) {
+  //   if () {
+  //     return this.invisibleStyle();
+  //   }
+  //
+  //   // Otherwise, we should be visible!
+  //   this.setState({
+  //     show: true
+  //   });
+  //   setTimeout(() => this.visibleStyle(), 10);
+  // }
+
+  visibleStyle() {
+    this.setState({
+      style: {
+        opacity: 1,
+        transition: 'all 1s ease'
+      }
+    })
+  }
+
+  invisibleStyle(callback) {
+    this.callback = callback;
+    this.setState({
+      open: false,
+      style: {
+        opacity: 0,
+        transition: 'all 1s ease'
+      }
+    });
+  }
+
+  transitionEnd(e) {
+    // Call the callback after the animation is officially over.
+   if (e.target.className.includes('BookListAnimation')) {
+      if (this.state.style.opacity === 0) {
+        this.setState({
+          show: false
+        }, this.execCallback);
+      }
+    }
+  }
+
+  execCallback() {
+    if (this.callback !== undefined) {
+      this.callback();
     }
   }
 
@@ -47,7 +105,7 @@ export default class BookListEntry extends React.Component {
 
   onClick() {
     if (this.isComplete()) {
-      this.props.finishBook();
+      this.invisibleStyle(() => this.props.finishBook());
     } else {
       this.setState({
         open: !this.state.open
@@ -56,8 +114,14 @@ export default class BookListEntry extends React.Component {
   }
 
   render() {
+    // We and this with the show so that when it is invisible we force React to
+    // unmount the component (otherwise it would stick around forever).
+    // Also cool animation with remove and update book. Basically, once the
+    // style is invisible, we run that callback and then unmount because
+    // show becomes false.
     return (
-        <ListGroup.Item>
+        this.state.show &&
+        <ListGroup.Item style={this.state.style} onTransitionEnd={(event) => this.transitionEnd(event)} className="BookListAnimation">
           <Container>
             <Row className="align-items-center">
               <Col sm={3}>
@@ -84,8 +148,8 @@ export default class BookListEntry extends React.Component {
                   <div id="book-config-collapse">
                     <div className="pt-3 pb-3">
                       <BookPageConfigForm
-                          updateBook={(p, m) => this.props.updateBook(p, m)}
-                          removeBook={() => this.props.removeBook(this.props)}
+                          updateBook={(p, m) => this.props.updateBook(p, m) }
+                          removeBook={() => this.invisibleStyle(() => this.props.removeBook()) }
                           current_page={this.props.book.current_page}
                           length={this.props.book.length}
                       />
