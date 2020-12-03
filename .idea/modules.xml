@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/book_track.iml" filepath="$PROJECT_DIR$/.idea/book_track.iml" />
       <module fileurl="file://$PROJECT_DIR$/../book_track_backend/.idea/book_track_backend.iml" filepath="$PROJECT_DIR$/../book_track_backend/.idea/book_track_backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../gutenberg-http/.idea/gutenberg-http.iml" filepath="$PROJECT_DIR$/../gutenberg-http/.idea/gutenberg-http.iml" />
     </modules>
   </component>
 </project>
