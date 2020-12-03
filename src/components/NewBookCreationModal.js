@@ -1,5 +1,6 @@
-import React from 'react';
-import {Button, Modal, Container, Row, Col, InputGroup, FormControl} from 'react-bootstrap';
+import React, {forwardRef, useState} from 'react';
+import {Button, Modal, Container, Row, Col, InputGroup, FormControl, Dropdown} from 'react-bootstrap';
+import {Globe} from "react-bootstrap-icons";
 
 export default class NewBookCreationModal extends React.Component {
   constructor(props) {
@@ -9,7 +10,22 @@ export default class NewBookCreationModal extends React.Component {
       length: 1,
       isTitleInputValid: false,
       isLengthInputValid: false,
+      possibleGBooks: []
     }
+  }
+
+  updatePossibleGBooks(prefix) {
+    const location = 'http://10.0.0.16:8080/gbooks/search/' + prefix;
+    fetch(location).then(r => {
+      console.log(r);
+        r.json().then(result => {
+            console.log(result);
+            this.setState({ possibleGBooks: result });
+        }).catch(err => {
+            console.error(err);
+            this.setState({ possibleGBooks: [] });
+        })
+    });
   }
 
   onTitleChange(event) {
@@ -19,6 +35,7 @@ export default class NewBookCreationModal extends React.Component {
       this.setState({title: event.target.value, isTitleInputValid: false});
       return;
     }
+    this.updatePossibleGBooks(event.target.value);
     this.setState({title: event.target.value, isTitleInputValid: true});
   }
 
@@ -37,9 +54,16 @@ export default class NewBookCreationModal extends React.Component {
       title: '',
       length: 1,
       isTitleInputValid: false,
-      isLengthInputValid: false
+      isLengthInputValid: false,
+      possibleGBooks: []
     });
     this.props.onAdd(title, length);
+  }
+
+  exactGBookMatch() {
+    return this.state.possibleGBooks.filter((book) => {
+      return book.title === this.state.title;
+    }).length >= 1;
   }
 
   render() {
@@ -63,8 +87,16 @@ export default class NewBookCreationModal extends React.Component {
                     </InputGroup.Text>
                   </InputGroup.Prepend>
                   <FormControl
-                    onChange={(event) => this.onTitleChange(event)}
+                      onChange={(event) => this.onTitleChange(event)}
                   />
+                  <InputGroup.Append>
+                    <InputGroup.Text>
+                      <Globe className={
+                        this.state.possibleGBooks.length > 0?
+                            (this.exactGBookMatch() ? "text-success" : "text-info"):
+                            "text-secondary"}/>
+                    </InputGroup.Text>
+                  </InputGroup.Append>
                 </InputGroup>
               </Col>
             </Row>
