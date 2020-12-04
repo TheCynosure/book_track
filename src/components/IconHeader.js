@@ -70,9 +70,7 @@ class IconHeader extends React.Component {
                     className={"IconHeader"}
                     style={this.state.style}
                 >
-                    {this.props.showBook?
-                        <Book onClick={() => this.onClick()}/> :
-                        <GraphUp onClick={() => this.onClick()}/> }
+                    <Book />
                 </h1>
             </Container>
         );
