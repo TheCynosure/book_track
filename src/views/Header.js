@@ -19,7 +19,7 @@ export default class Header extends React.Component {
 
     render() {
         return (
-            <Container fluid>
+            <Container fluid style={{overflowY: 'auto', overflowX: 'hidden'}}>
                 <IconHeader onClick={() => this.switchViews()} showBook={this.state.mainView}/>
                 {
                     this.state.mainView? <Main /> : <Stats />

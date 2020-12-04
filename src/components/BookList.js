@@ -7,8 +7,6 @@ export default function BookList(props) {
   return (
     <Container>
       <Row>
-      </Row>
-      <Row>
         <Col>
           <ListGroup>
             {props.books.map((book, index) => 

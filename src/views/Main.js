@@ -217,7 +217,12 @@ class Main extends React.Component {
         const width = this.state.windowSize.width;
         const height = this.state.windowSize.height;
         return (
-            <Container>
+            <Container
+                lg={8}
+                md={8}
+                sm={8}
+                xs={12}
+            >
                 <Confetti
                     width={width}
                     height={height}

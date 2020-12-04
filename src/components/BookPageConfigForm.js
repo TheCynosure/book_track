@@ -24,7 +24,13 @@ export default function BookPageConfigForm(props) {
     <Container className="w-100 p-0">
       <hr></hr>
       <Row className="pt-3 pb-3 align-items-center">
-        <Col sm={3}>
+        <Col
+            lg={3}
+            md={3}
+            sm={3}
+            xs={12}
+            className="px-0 py-2"
+        >
           <InputGroup size="sm">
             <InputGroup.Prepend>
               <InputGroup.Text>
@@ -37,7 +43,13 @@ export default function BookPageConfigForm(props) {
             />
           </InputGroup>
         </Col>
-        <Col sm={3}>
+        <Col
+            lg={{ span: 4, offset: 1 }}
+            md={{ span: 4, offset: 1 }}
+            sm={{ span: 4, offset: 1 }}
+            xs={12}
+            className="px-0 py-2"
+        >
           <InputGroup size="sm">
             <InputGroup.Prepend>
               <InputGroup.Text>
@@ -51,7 +63,13 @@ export default function BookPageConfigForm(props) {
           </InputGroup>
         </Col>
         {(props.link === '')? <></> :
-            <Col md={{ span: 1 }}>
+            <Col
+                className="px-0 py-2 text-center"
+                lg={{ span: 1, offset: 0}}
+                md={{ span: 1, offset: 0 }}
+                sm={{ span: 1, offset: 4 }}
+                xs={{ span: 1, offset: 0 }}
+            >
               <Button
                 variant="info"
                 className="btn-sm"
@@ -64,7 +82,13 @@ export default function BookPageConfigForm(props) {
                 <Globe />
               </Button>
             </Col>}
-        <Col md={{ span: 1, offset: (props.link === '')? 5 : 4 }}>
+        <Col
+             className="px-0 py-2 text-center"
+             lg={{ span: 1, offset: (props.link === '')? 3 : 2 }}
+             md={{ span: 1, offset: (props.link === '')? 3 : 2 }}
+             sm={{ span: 1, offset: (props.link === '')? 5 : 3 }}
+             xs={{ span: 1, offset: 9 }}
+        >
           <Button
             variant="danger"
             className="btn-sm"

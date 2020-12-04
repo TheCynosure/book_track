@@ -124,12 +124,10 @@ export default class BookListEntry extends React.Component {
         <ListGroup.Item style={this.state.style} onTransitionEnd={(event) => this.transitionEnd(event)} className="BookListAnimation">
           <Container>
             <Row className="align-items-center">
-              <Col sm={3}>
+              <Col lg={4} sm={12} xs={12} className="px-0 py-2">
                 <h4 className="mb-0">{this.props.book.title}</h4>
               </Col>
-              <Col sm={1}>
-              </Col>
-              <Col sm={7}>
+              <Col lg={7} sm={12} xs={12} className="px-0 py-2">
                 <ProgressBar
                     variant={this.props.book.current_page >= this.props.book.length? "success" : "info"}
                     now={(this.props.book.current_page / this.props.book.length) * 100}
@@ -138,7 +136,7 @@ export default class BookListEntry extends React.Component {
                     disabled={this.props.disabled}
                 />
               </Col>
-              <Col xs={1}>
+              <Col lg={{ span: 1, offset: 0}} sm={{ span: 12, offset: 0 }} xs={{ span: 12, offset: 0}} className="py-2 text-center">
                 {this.renderButton()}
               </Col>
             </Row>
