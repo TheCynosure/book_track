@@ -1,5 +1,7 @@
 # Book Track
 
+![Book track UI image](doc/BookTrackUI.png)
+
 A book progress tracking react app to help me monitor my reading without giving my data over to other services. Basically a CRUD app with nice UI and some little extra features.
 
 ### Features
