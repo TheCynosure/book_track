@@ -8,7 +8,7 @@ import Confetti from 'react-confetti';
 import ReactTimeout from 'react-timeout';
 import ReadingGoalProgressBar from '../components/ReadingGoalProgressBar';
 
-const server = 'http://10.0.0.16:8080/'
+const server = 'http://10.0.0.15:8080/'
 
 class Main extends React.Component {
 
