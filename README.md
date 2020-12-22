@@ -40,3 +40,7 @@ To combine the frontend and backend you will have to build the frontend and then
 ### Issues
 
 If you run into issues please feel free to open an issue or pull request. 
+
+### Code Layout Notes
+
+Code is all inside the src folder and is mainly inside two folders. The components folder holds all the React components that make up each page. The views folder holds each individual page. This is a bit of a misnomer as the header bar where the book appears is actually its own page. But, this was designed so that in the future it can act as a navbar when I eventually want to add a stats screen.
