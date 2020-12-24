@@ -15,11 +15,9 @@ export default class Splash extends React.Component {
                     </Card.Body>
                     <Card.Footer>
                         <div className="d-flex w-100">
-                            <a href="/book_track" className="ml-auto">
-                                <Button>
-                                    Continue to Demo
-                                </Button>
-                            </a>
+                            <Button className="ml-auto" onClick={this.props.onClick}>
+                                Continue to Demo
+                            </Button>
                         </div>
                     </Card.Footer>
                 </Card>

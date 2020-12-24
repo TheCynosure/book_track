@@ -185,7 +185,8 @@ class Main extends React.Component {
     }
 
     isTitleUnique(title) {
-        return this.state.books.filter((curr) => curr.title === title).length === 0
+        return this.state.books.filter((curr) => curr.title === title).length === 0 &&
+               this.state.history.filter((curr) => curr.title === title) === 0;
     }
 
     renderBookHistory() {

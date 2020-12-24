@@ -20,13 +20,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="10a6a9a5-4444-46c0-b386-1e744b3c1a07" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/views/Splash.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.eslintcache" beforeDir="false" afterPath="$PROJECT_DIR$/.eslintcache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Main.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Splash.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Splash.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,7 +68,7 @@
       <updated>1608673729541</updated>
       <workItem from="1608673730899" duration="24000" />
       <workItem from="1608781226258" duration="1667000" />
-      <workItem from="1608821202300" duration="1097000" />
+      <workItem from="1608821202300" duration="1602000" />
     </task>
     <servers />
   </component>
