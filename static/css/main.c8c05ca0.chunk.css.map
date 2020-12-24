@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/index.css"],"names":[],"mappings":"AAAA,OACI,eACJ,CAEA,YACI,aAAc,CACd,yBACJ,CAEA,KACI,iBACJ","file":"main.c8c05ca0.chunk.css","sourcesContent":[".modal {\n    overflow-y: auto;\n}\n\n.modal-open {\n    overflow: auto;\n    padding-right: 0 !important;\n}\n\nhtml {\n    overflow-x: hidden;\n}\n"]}
