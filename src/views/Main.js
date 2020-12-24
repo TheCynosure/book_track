@@ -8,7 +8,7 @@ import Confetti from 'react-confetti';
 import ReactTimeout from 'react-timeout';
 import ReadingGoalProgressBar from '../components/ReadingGoalProgressBar';
 
-const server = 'http://10.0.0.15:8080/'
+const server = 'https://book-track-backend.herokuapp.com/'
 
 class Main extends React.Component {
 
@@ -161,7 +161,7 @@ class Main extends React.Component {
         }
 
         const location =
-            "http://localhost:8080/" + ((toHistory) ? "history" : "books");
+            server + ((toHistory) ? "history" : "books");
 
         this.setState({showAddModal: false});
         const request = new Request(location, settings);

@@ -2,6 +2,8 @@ import React, {forwardRef, useState} from 'react';
 import {Button, Modal, Container, Row, Col, InputGroup, FormControl, Dropdown} from 'react-bootstrap';
 import {Globe} from "react-bootstrap-icons";
 
+const server = 'https://book-track-backend.herokuapp.com/'
+
 export default class NewBookCreationModal extends React.Component {
   constructor(props) {
     super(props);
@@ -15,11 +17,9 @@ export default class NewBookCreationModal extends React.Component {
   }
 
   updatePossibleGBooks(prefix) {
-    const location = 'http://10.0.0.16:8080/gbooks/search/' + prefix;
+    const location = server + 'gbooks/search/' + prefix;
     fetch(location).then(r => {
-      console.log(r);
         r.json().then(result => {
-            console.log(result);
             this.setState({ possibleGBooks: result });
         }).catch(err => {
             console.error(err);
